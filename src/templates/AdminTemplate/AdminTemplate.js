@@ -1,6 +1,7 @@
 
 import { Fragment } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, NavLink } from 'react-router-dom'
+
 
 export const AdminTemplate = (props) => {
     const { Component, ...restProps } = props;
@@ -564,47 +565,29 @@ export const AdminTemplate = (props) => {
                                             Tables
                                         </a>
                                     </li>
-                                    <li className="app-sidebar__heading">Widgets</li>
+                                    <li className="app-sidebar__heading">Achivement</li>
                                     <li>
-                                        <a href="dashboard-boxes.html">
+                                        <NavLink to='/achivement'>
                                             <i className="metismenu-icon pe-7s-display2" />
-                                            Dashboard Boxes
-                                        </a>
+                                            Achivement
+                                        </NavLink>
                                     </li>
-                                    <li className="app-sidebar__heading">Forms</li>
+                                    <li className="app-sidebar__heading">Process</li>
                                     <li>
-                                        <a href="forms-controls.html">
+                                        <NavLink to='/processtype'>
                                             <i className="metismenu-icon pe-7s-mouse">
-                                            </i>Forms Controls
-                                        </a>
+                                            </i>Process Type
+                                        </NavLink>
                                     </li>
+
+                                    <li className="app-sidebar__heading">Report</li>
                                     <li>
-                                        <a href="forms-layouts.html">
-                                            <i className="metismenu-icon pe-7s-eyedropper">
-                                            </i>Forms Layouts
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="forms-validation.html">
-                                            <i className="metismenu-icon pe-7s-pendrive">
-                                            </i>Forms Validation
-                                        </a>
-                                    </li>
-                                    <li className="app-sidebar__heading">Charts</li>
-                                    <li>
-                                        <a href="charts-chartjs.html">
+                                        <NavLink to='reporttype'>
                                             <i className="metismenu-icon pe-7s-graph2">
-                                            </i>ChartJS
-                                        </a>
+                                            </i>Report Type
+                                        </NavLink>
                                     </li>
-                                    <li className="app-sidebar__heading">PRO Version</li>
-                                    <li>
-                                        <a href="https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/" target="_blank">
-                                            <i className="metismenu-icon pe-7s-graph2">
-                                            </i>
-                                            Upgrade to PRO
-                                        </a>
-                                    </li>
+
                                 </ul>
                             </div>
                         </div>

@@ -3,56 +3,31 @@ import moment from 'moment';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-// import { ProductService } from './service/ProductService';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { FileUpload } from 'primereact/fileupload';
 import { Rating } from 'primereact/rating';
 import { Toolbar } from 'primereact/toolbar';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton } from 'primereact/radiobutton';
-import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
-import { CreateAchivementAction, DeleteAchivementAction, GetListAchivementAction, UpdateAchivementAction } from '../redux/actions/AchivementAction';
 import { useDispatch, useSelector } from 'react-redux';
-import { storage_bucket } from './../firebase';
+import { storage_bucket } from './../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { CreateProcessTypeAction, DeleteProcessTypeAction, GetListProcessTypeAction, UpdateProcessTypeAction } from '../../redux/actions/ProcessTypeAction';
+import { CreateReportTypeAction, DeleteReportTypeAction, GetListReportTypeAction, UpdateReportTypeAction } from '../../redux/actions/ReportTypeAction';
 
-export default function Admin () {
+export default function ReportType () {
     const dispatch = useDispatch()
-    const { arrAchivement } = useSelector(root => root.AchivementReducer)
-    console.log(arrAchivement);
-    const [id, setID] = useState('abc')
+    const { reportType } = useSelector(root => root.ReportType)
+    console.log(reportType);
     let emptyProduct = {
-        achivementId: 'string',
-        achivementLogo: "",
-        description: "",
-        createAt: moment().format('YYYY-MM-DD'),
+        reportTypeId: "0",
+        reportTypeName: "",
         status: true
     };
 
-    const uploadFile = (e) => {
-        let file = e.target.files[0];
-        let fileRef = ref(storage_bucket, file.name);
 
-        const uploadTask = uploadBytesResumable(fileRef, file);
-
-        uploadTask.on('state_changed', (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-            // console.log(snapshot);
-        },
-            (err) => console.log(err),
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    console.log(url);
-                    const updatedProduct = { ...product, achivementLogo: url }; // Update achivementLogo property in product object
-                    setProduct(updatedProduct);
-                });
-            });
-    };
 
     const [text, setText] = useState('Add New')
     const [products, setProducts] = useState([]);
@@ -67,13 +42,13 @@ export default function Admin () {
     const dt = useRef(null);
     console.log(product);
     useEffect(() => {
-        const action = GetListAchivementAction();
+        const action = GetListReportTypeAction();
         dispatch(action)
     }, []);
     useEffect(() => {
 
-        setProducts(arrAchivement)
-    }, [arrAchivement]);
+        setProducts(reportType)
+    }, [reportType]);
     console.log(products);
 
     // const formatCurrency = (value) => {
@@ -103,31 +78,30 @@ export default function Admin () {
     const saveProduct = async () => {
         setSubmitted(true);
 
-        if (product.description.trim()) {
+        if (product.reportTypeName.trim()) {
             let _products = [...products];
             let _product = { ...product };
 
-            if (product.achivementId) {
+            if (product.reportTypeId !== '0') {
                 const index = findIndexById(product.id);
 
                 _products[index] = _product;
-                console.log(product.achivementId);
-                const action = await UpdateAchivementAction(product)
+                console.log(product.reportTypeId);
+                const action = await UpdateReportTypeAction(product)
                 await dispatch(action)
                 setProductDialog(false);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Updated Achivement', life: 3000, });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Updated Process Type', life: 3000, });
 
             } else {
-                const action = await CreateAchivementAction(product)
+                const action = await CreateReportTypeAction(product)
                 await dispatch(action)
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Created Achivement', life: 3000 });
-                setProductDialog(false);
-                setProduct(emptyProduct)
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Created Process Type', life: 3000 });
+
             }
 
             setProducts(_products);
-
-
+            setProductDialog(false);
+            setProduct(emptyProduct)
         }
     };
 
@@ -144,12 +118,12 @@ export default function Admin () {
 
     const deleteProduct = async () => {
 
-        const action = await DeleteAchivementAction(product.achivementId)
+        const action = await DeleteReportTypeAction(product.reportTypeId)
         await dispatch(action)
         setDeleteProductDialog(false);
         setProduct(emptyProduct);
         toast.current.show({
-            severity: 'error', summary: 'Successful', detail: 'Deleted Achivement', life: 3000, options: {
+            severity: 'error', summary: 'Successful', detail: 'Deleted Process Type', life: 3000, options: {
                 style: {
                     zIndex: 100
                 }
@@ -206,9 +180,7 @@ export default function Admin () {
     };
 
     const onInputChange = (e, name) => {
-        if (name === 'achivementLogo') {
-            uploadFile(e); // Call uploadFile function when achivementLogo value changes
-        }
+
 
         const val = (e.target && e.target.value) || '';
         let _product = { ...product };
@@ -287,7 +259,7 @@ export default function Admin () {
 
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <h4 className="m-0">Manage Achivements</h4>
+            <h4 className="m-0">Manage Process Type</h4>
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
@@ -325,10 +297,10 @@ export default function Admin () {
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header}>
                         <Column selectionMode="multiple" exportable={false}></Column>
-                        <Column field="achivementId" header="Code" sortable style={{ minWidth: '11rem' }}></Column>
-                        <Column field="achivementLogo" header="Image" body={imageBodyTemplate}></Column>
-                        <Column field="description" header="Name" sortable style={{ minWidth: '12rem' }}></Column>
-                        <Column field={createAt => moment(createAt.createAt).format('DD-MM-YYYY')} header="Day" sortable style={{ minWidth: '12rem' }}></Column>
+                        <Column field="reportTypeId" header="Code" sortable style={{ minWidth: '11rem' }}></Column>
+                        <Column field="reportTypeName" header="Name" sortable style={{ minWidth: '11rem' }}></Column>
+                        {/* <Column field="description" header="Description" sortable style={{ minWidth: '12rem' }}></Column> */}
+                        {/* <Column field={createAt => moment(createAt.createAt).format('DD-MM-YYYY')} header="Day" sortable style={{ minWidth: '12rem' }}></Column> */}
                         {/* <Column field="price" header="Price" body={priceBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
                         <Column field="category" header="Category" sortable style={{ minWidth: '10rem' }}></Column>
                         <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable style={{ minWidth: '12rem' }}></Column>
@@ -341,20 +313,13 @@ export default function Admin () {
 
                     <div className="field">
                         <label htmlFor="name" className="font-bold">
-                            Logo
+                            Name
                         </label>
                         <br />
-                        {product?.achivementLogo === '' ? <div></div> : <img src={product.achivementLogo} style={{ width: '200px', height: '200px' }} />}
-                        <br />
-                        <input type='file' id="achivementLogo" onChange={(e) => onInputChange(e, 'achivementLogo')} />
+                        <InputText id="reportTypeName" value={product.reportTypeName} onChange={(e) => onInputChange(e, 'reportTypeName')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+                        {submitted && !product.reportTypeName && <small className="p-error">Report Name is required.</small>}
                     </div>
-                    <div className="field">
-                        <label htmlFor="description" className="font-bold">
-                            Description
-                        </label>
-                        <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-                        {/* {submitted && !product.description && <small className="p-error">Name is required.</small>} */}
-                    </div>
+
 
 
 
@@ -383,3 +348,4 @@ export default function Admin () {
 
     )
 }
+

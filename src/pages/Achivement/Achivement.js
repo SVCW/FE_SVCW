@@ -15,18 +15,19 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
-import { CreateAchivementAction, DeleteAchivementAction, GetListAchivementAction, UpdateAchivementAction } from '../redux/actions/AchivementAction';
+import { CreateAchivementAction, DeleteAchivementAction, GetListAchivementAction, UpdateAchivementAction } from './../../redux/actions/AchivementAction';
 import { useDispatch, useSelector } from 'react-redux';
-import { storage_bucket } from './../firebase';
+import { storage_bucket } from './../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
-export default function Admin () {
+export default function Achivement () {
     const dispatch = useDispatch()
     const { arrAchivement } = useSelector(root => root.AchivementReducer)
     console.log(arrAchivement);
     const [id, setID] = useState('abc')
+    let counter = 0;
     let emptyProduct = {
-        achivementId: 'string',
+        achivementId: counter.toString(),
         achivementLogo: "",
         description: "",
         createAt: moment().format('YYYY-MM-DD'),
@@ -74,7 +75,6 @@ export default function Admin () {
 
         setProducts(arrAchivement)
     }, [arrAchivement]);
-    console.log(products);
 
     // const formatCurrency = (value) => {
     //     return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -107,7 +107,7 @@ export default function Admin () {
             let _products = [...products];
             let _product = { ...product };
 
-            if (product.achivementId) {
+            if (product.achivementId !== '0') {
                 const index = findIndexById(product.id);
 
                 _products[index] = _product;
@@ -115,17 +115,21 @@ export default function Admin () {
                 const action = await UpdateAchivementAction(product)
                 await dispatch(action)
                 setProductDialog(false);
+                counter++;
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Updated Achivement', life: 3000, });
 
             } else {
                 const action = await CreateAchivementAction(product)
                 await dispatch(action)
+                counter++;
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Created Achivement', life: 3000 });
-                setProductDialog(false);
-                setProduct(emptyProduct)
+
+
             }
 
             setProducts(_products);
+            setProductDialog(false);
+            setProduct(emptyProduct)
 
 
         }

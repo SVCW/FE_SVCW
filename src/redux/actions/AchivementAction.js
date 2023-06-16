@@ -45,3 +45,16 @@ export const UpdateAchivementAction = (value) => {
         }
     }
 }
+
+export const DeleteAchivementAction = (value) => {
+    return async (dispatch) => {
+        try {
+            let result = await http.delete(`/Achivement/delete-achivement-by-id?achivementId=${value}`);
+            const action = GetListAchivementAction();
+            dispatch(action)
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}

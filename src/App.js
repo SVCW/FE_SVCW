@@ -1,18 +1,22 @@
 
 import './App.css';
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import Admin from "./socimo-html-files/Admin";
 import { AdminTemplate } from "./templates/AdminTemplate/AdminTemplate";
 import Test from './socimo-html-files/Test';
 import Achivement from './pages/Achivement/Achivement';
 import ProcessType from './pages/ProcessType/ProcessType';
 import ReportType from './pages/ReportType/ReportType';
+import Login from './pages/Login/Login';
+import { createBrowserHistory } from 'history'
+export const history = createBrowserHistory()
+
 function App () {
+
   return (
-    <Router>
-      <div>
+    <Router history={history}>
+      <Switch>
         {/* <AboutUniversity /> */}
         {/* <SignIn /> */}
         {/* <Home /> */}
@@ -21,9 +25,10 @@ function App () {
         <AdminTemplate exact path="/processtype" Component={ProcessType} />
         <AdminTemplate exact path="/reporttype" Component={ReportType} />
         {/* <AdminTemplate exact path="/table" Component={Admin} /> */}
-        <Route exact path="/" component={Test} />
+        <Route exact path="/home" component={Test} />
+        <Route exact path="/" component={Login} />
 
-      </div>
+      </Switch>
     </Router>
   );
 }

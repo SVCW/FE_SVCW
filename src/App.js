@@ -10,6 +10,7 @@ import ProcessType from './pages/ProcessType/ProcessType';
 import ReportType from './pages/ReportType/ReportType';
 import Login from './pages/Login/Login';
 import { createBrowserHistory } from 'history'
+import Role from './pages/Role/Role';
 export const history = createBrowserHistory()
 
 function App () {
@@ -24,6 +25,7 @@ function App () {
         <AdminTemplate exact path="/achivement" Component={Achivement} />
         <AdminTemplate exact path="/processtype" Component={ProcessType} />
         <AdminTemplate exact path="/reporttype" Component={ReportType} />
+        <AdminTemplate exact path="/role" Component={Role} />
         {/* <AdminTemplate exact path="/table" Component={Admin} /> */}
         <Route exact path="/home" component={Test} />
         <Route exact path="/" component={Login} />

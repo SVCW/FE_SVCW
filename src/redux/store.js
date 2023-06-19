@@ -3,12 +3,14 @@ import reduxThunk from 'redux-thunk';
 import { AchivementReducer } from './reducers/AchivementReducer';
 import { ProcessTypeReducer } from './reducers/ProcessTypeReducer';
 import { ReportType } from './reducers/ReportType'
+import { RoleReducer } from './reducers/RoleReducer';
 
 
 const rootReducer = combineReducers({
     AchivementReducer,
     ProcessTypeReducer,
     ReportType,
+    RoleReducer,
 })
 
 let middleWare = applyMiddleware(reduxThunk);

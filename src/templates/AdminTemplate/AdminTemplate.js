@@ -588,6 +588,13 @@ export const AdminTemplate = (props) => {
                                         </NavLink>
                                     </li>
 
+                                    <li className="app-sidebar__heading">Role</li>
+                                    <li>
+                                        <NavLink to='role'>
+                                            <i className="metismenu-icon pe-7s-graph2">
+                                            </i>Role
+                                        </NavLink>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

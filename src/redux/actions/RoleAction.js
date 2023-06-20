@@ -16,3 +16,17 @@ export const GetListRoleAction = () => {
         }
     }
 }
+
+export const CreateRoleAction = (value) => {
+    return async (dispatch) => {
+        try {
+            let result = await http.post('/Role/Insert-Role', value);
+            console.log(result.data.data);
+            const action = GetListRoleAction();
+            dispatch(action)
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}

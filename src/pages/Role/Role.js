@@ -17,7 +17,7 @@ import { CreateAchivementAction, DeleteAchivementAction, GetListAchivementAction
 import { useDispatch, useSelector } from 'react-redux';
 import { storage_bucket } from './../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { GetListRoleAction } from '../../redux/actions/RoleAction';
+import { CreateRoleAction, GetListRoleAction } from '../../redux/actions/RoleAction';
 
 export default function Role () {
     const dispatch = useDispatch()
@@ -26,11 +26,9 @@ export default function Role () {
     const [id, setID] = useState('abc')
     let counter = 0;
     let emptyProduct = {
-        achivementId: counter.toString(),
-        achivementLogo: "",
-        description: "",
-        createAt: moment().format('YYYY-MM-DD'),
-        status: true
+        roleId: counter.toString(),
+        roleName: "",
+        description: ""
     };
 
     const uploadFile = (e) => {
@@ -106,22 +104,22 @@ export default function Role () {
             let _products = [...products];
             let _product = { ...product };
 
-            if (product.achivementId !== '0') {
+            if (product.roleId !== '0') {
                 const index = findIndexById(product.id);
 
                 _products[index] = _product;
-                console.log(product.achivementId);
-                const action = await UpdateAchivementAction(product)
-                await dispatch(action)
+                console.log(product.roleId);
+                // const action = await UpdateAchivementAction(product)
+                // await dispatch(action)
                 setProductDialog(false);
                 counter++;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Updated Achivement', life: 3000, });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Updated Role', life: 3000, });
 
             } else {
-                const action = await CreateAchivementAction(product)
+                const action = await CreateRoleAction(product)
                 await dispatch(action)
                 counter++;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Created Achivement', life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Created Role', life: 3000 });
 
 
             }
@@ -209,9 +207,9 @@ export default function Role () {
     };
 
     const onInputChange = (e, name) => {
-        if (name === 'achivementLogo') {
-            uploadFile(e); // Call uploadFile function when achivementLogo value changes
-        }
+        // if (name === 'achivementLogo') {
+        //     uploadFile(e); // Call uploadFile function when achivementLogo value changes
+        // }
 
         const val = (e.target && e.target.value) || '';
         let _product = { ...product };
@@ -342,15 +340,20 @@ export default function Role () {
 
                 <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={text} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
 
-                    <div className="field">
-                        <label htmlFor="name" className="font-bold">
-                            Logo
-                        </label>
-                        <br />
-                        {product?.achivementLogo === '' ? <div></div> : <img src={product.achivementLogo} style={{ width: '200px', height: '200px' }} />}
-                        <br />
-                        <input type='file' id="achivementLogo" onChange={(e) => onInputChange(e, 'achivementLogo')} />
-                    </div>
+                    <label htmlFor="description" className="font-bold">
+                        Name
+                    </label>
+                    {product.roleId === '0' ? <InputText id="roleName" value={product.roleName} onChange={(e) => onInputChange(e, 'roleName')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.roleName })} />
+                        :
+                        <div className="field">
+                            <select id="roleName" name="m" className="custom-select">
+                                <option value="property">Properties</option>
+                                <option value="todo">Todos</option>
+                                <option value="landlord">Landlords</option>
+                                <option value="offer">Offers</option>
+                                <option value="opportunity">Opportunities</option>
+                            </select>
+                        </div>}
                     <div className="field">
                         <label htmlFor="description" className="font-bold">
                             Description

@@ -4,6 +4,7 @@ import { AchivementReducer } from './reducers/AchivementReducer';
 import { ProcessTypeReducer } from './reducers/ProcessTypeReducer';
 import { ReportType } from './reducers/ReportType'
 import { RoleReducer } from './reducers/RoleReducer';
+import { ActivityReducer } from './reducers/ActivityReducer';
 
 
 const rootReducer = combineReducers({
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     ProcessTypeReducer,
     ReportType,
     RoleReducer,
+    ActivityReducer,
 })
 
 let middleWare = applyMiddleware(reduxThunk);

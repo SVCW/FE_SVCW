@@ -11,6 +11,7 @@ import ReportType from './pages/ReportType/ReportType';
 import Login from './pages/Login/Login';
 import { createBrowserHistory } from 'history'
 import Role from './pages/Role/Role';
+import Home from './pages/Home/Home';
 export const history = createBrowserHistory()
 
 function App () {
@@ -27,7 +28,7 @@ function App () {
         <AdminTemplate exact path="/reporttype" Component={ReportType} />
         <AdminTemplate exact path="/role" Component={Role} />
         {/* <AdminTemplate exact path="/table" Component={Admin} /> */}
-        <Route exact path="/home" component={Test} />
+        <Route exact path="/home" component={Home} />
         <Route exact path="/" component={Login} />
 
       </Switch>

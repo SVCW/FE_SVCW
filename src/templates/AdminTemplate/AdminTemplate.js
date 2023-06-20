@@ -48,7 +48,7 @@ export const AdminTemplate = (props) => {
                                 </div>
                                 <button className="close" />
                             </div>
-                            <ul className="header-menu nav">
+                            {/* <ul className="header-menu nav">
                                 <li className="nav-item">
                                     <a href="javascript:void(0);" className="nav-link">
                                         <i className="nav-link-icon fa fa-database"> </i>
@@ -67,7 +67,8 @@ export const AdminTemplate = (props) => {
                                         Settings
                                     </a>
                                 </li>
-                            </ul>      </div>
+                            </ul> */}
+                        </div>
                         <div className="app-header-right">
                             <div className="header-btn-lg pr-0">
                                 <div className="widget-content p-0">
@@ -108,7 +109,7 @@ export const AdminTemplate = (props) => {
                 </div>
                 <div className="ui-theme-settings">
                     <button type="button" id="TooltipDemo" className="btn-open-options btn btn-warning">
-                        <i className="fa fa-cog fa-w-16 fa-spin fa-2x" />
+                        <i className="metismenu-state-icon pe-7s-config fa-spin fa-3x " style={{ marginTop: '10px', width: '40px' }} />
                     </button>
                     <div className="theme-settings__inner">
                         <div className="scrollbar-container">
@@ -416,10 +417,11 @@ export const AdminTemplate = (props) => {
                                     </span>
                                 </button>
                             </span>
-                        </div>    <div className="scrollbar-sidebar">
+                        </div>
+                        <div className="scrollbar-sidebar">
                             <div className="app-sidebar__inner">
                                 <ul className="vertical-nav-menu">
-                                    <li className="app-sidebar__heading">Dashboards</li>
+                                    {/* <li className="app-sidebar__heading">Dashboards</li>
                                     <li>
                                         <a href="index.html" className="mm-active">
                                             <i className="metismenu-icon pe-7s-rocket" />
@@ -564,7 +566,7 @@ export const AdminTemplate = (props) => {
                                             <i className="metismenu-icon pe-7s-display2" />
                                             Tables
                                         </a>
-                                    </li>
+                                    </li> */}
                                     <li className="app-sidebar__heading">Achivement</li>
                                     <li>
                                         <NavLink to='/achivement'>

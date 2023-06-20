@@ -2,10 +2,17 @@ import React from 'react'
 import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../../firebase';
 import { history } from '../../App';
-import Test from '../../socimo-html-files/Test';
 import { useState } from 'react';
+import { useFormik } from 'formik'
 export default function Login (props) {
-    const [test, setTest] = useState(1)
+    const formik = useFormik({
+        initialValues: {
+
+        },
+        onSubmit: (value) => {
+            console.log(value);
+        }
+    })
     const signInWithGoogle = () => {
         signInWithPopup(auth, provider).then((result) => {
 
@@ -35,11 +42,6 @@ export default function Login (props) {
             .catch((error) => {
                 console.log(error);
             })
-            .then(() =>
-                setTimeout(() => {
-                    props.history.push("/home");
-                }, 3000)
-            );
 
 
 
@@ -78,14 +80,16 @@ export default function Login (props) {
                 <div className="verticle-center">
                     <div className="login-form">
                         <h4><i className="icofont-key-hole" /> Login</h4>
-                        <form method="post" className="c-form">
+                        <form method="post" className="c-form" onSubmit={formik.handleSubmit}>
                             <input type="text" placeholder="User Name @" />
                             <input type="password" placeholder="xxxxxxxxxx" />
                             <div className="checkbox">
                                 <input type="checkbox" id="checkbox" defaultChecked />
                                 <label htmlFor="checkbox"><span>Remember Me</span></label>
                             </div>
-                            <button className="main-btn" type="submit"><i className="icofont-key" /> Login</button>
+                            <button className="main-btn" type="submit" onClick={() => {
+                                props.history.push('/achivement')
+                            }}><i className="icofont-key" /> Login</button>
                             <p
                                 style={{
                                     marginTop: 20,
@@ -105,7 +109,7 @@ export default function Login (props) {
                 </div>
                 <div className="mockup right"><img src="images/star-shape.png" alt /></div>
             </div>
-            {test === 1 ? <div></div> : <Test />}
+
         </div>
 
     )

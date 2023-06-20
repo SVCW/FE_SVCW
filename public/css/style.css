@@ -2321,6 +2321,7 @@ aside .widget {
   position: relative;
   width: 100%;
   z-index: 0;
+  margin-bottom: 20px;
 }
 
 .we-video-info>ul {
@@ -3120,6 +3121,7 @@ ul.welcome-caro li.welcome-box figure img {
 
 /*--- suggested friends caro ---*/
 .suggested-caro {
+  display: flex;
   list-style: outside none none;
   margin: 20px 0 0;
   padding-left: 0;
@@ -9855,21 +9857,39 @@ aside.sidebar .widget .activity-meta>i {
   text-transform: capitalize;
   transform: translateY(22px);
   transition: all 0.3s ease-in-out 0s;
+  opacity: 0;
 }
 
-.link-item>a:hover,
-.link-item>a.active {
-  border-bottom: 3px solid;
+.link-item>a:hover p {
+  opacity: 1;
 }
 
-.stat-tools>.box a>i {
+.stat-tools {
+  display: flex !important;
+  align-items: center;
+  /* Căn giữa các phần tử theo chiều dọc */
+  gap: 10px;
+  /* Khoảng cách giữa các phần tử */
+}
+
+/* .stat-tools>* {
+  flex: 1;
+  /* Phần tử chiếm đủ không gian trong container */
+
+
+*/ .stat-tools .comment-to {
+  flex: 0;
+  /* Không chiếm hết không gian, giữ lại kích thước tự nhiên */
+}
+
+.stat-tools>.box i {
   color: #7e7f9e;
   font-size: 16px;
   vertical-align: middle;
   margin-right: 3px;
 }
 
-.stat-tools>a.comment-to>i {
+.comment-to>i {
   color: #7e7f9e;
   font-size: 16px;
   vertical-align: middle;
@@ -9901,6 +9921,23 @@ aside.sidebar .widget .activity-meta>i {
   padding: 5px 20px;
   vertical-align: middle;
   transition: all 0.2s linear 0s;
+}
+
+.page-caro {
+  display: flex;
+  justify-content: space-around;
+}
+
+.bg {
+  background: #eae9ee;
+  border-radius: 4px;
+  color: #82828e;
+  display: inline-block;
+  font-size: 13px;
+  padding: 5px 20px;
+  vertical-align: middle;
+  transition: all 0.2s linear 0s;
+  cursor: pointer;
 }
 
 .stat-tools>a:hover,
@@ -10103,7 +10140,8 @@ aside.sidebar .widget .activity-meta>i {
 }
 
 .emoji-state {
-  float: right;
+  position: absolute;
+  right: 10px;
   margin-top: -2px;
   width: auto;
 }
@@ -14064,6 +14102,7 @@ nav.sidebar.padding {
   cursor: pointer;
   border-radius: 8px;
   border: 1px solid #eaeaea;
+  margin: 0 10px;
 }
 
 .story-card>.story-wraper:last-child {
@@ -14684,6 +14723,10 @@ ul.chat-rooms {
   width: 88%;
 }
 
+.modal-dialog .modal-content {
+  width: 100vw !important;
+}
+
 .modal-body .post-comt-box {
   width: 90%;
 }
@@ -14798,6 +14841,8 @@ ul.chat-rooms {
 
 .pop-item>figure img {
   width: 100%;
+  height: 600px;
+  object-fit: cover;
 }
 
 .commentbar .modal-body {

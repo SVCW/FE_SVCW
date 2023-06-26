@@ -4,6 +4,7 @@ import { Route, NavLink } from 'react-router-dom'
 import Header from './Header/Header';
 import SideBar from './SideBar/SideBar';
 import ResponsiveHeader from './ResponsiveHeader/ResponsiveHeader';
+import Carousel from './Carousel/Carousel';
 
 
 export const UserTemplate = (props) => {
@@ -12,6 +13,7 @@ export const UserTemplate = (props) => {
         return <div className='theme-layout'>
             <ResponsiveHeader />
             <Header />
+            <Carousel />
             <SideBar />
             <Component {...propsRoute} />
         </div>

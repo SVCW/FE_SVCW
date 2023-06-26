@@ -2432,7 +2432,7 @@ export default function Home () {
                                     </ul>
                                     <form method="post" className="dropzone" action="/upload-target">
                                         <div className="fallback">
-                                            <input name="file" type="file" multiple />
+                                            <input name="file" type="file" />
                                         </div>
                                     </form>
                                 </div>

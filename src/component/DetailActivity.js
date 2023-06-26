@@ -45,7 +45,7 @@ export default function DetailActivity (props) {
                                                 </svg>
                                             </a>
                                         </div>
-                                        <figure><img src={props.item.media && props.item.media[0] && props.item.media[0].linkMedia} alt height={300} /></figure>
+                                        <figure><img src={props.item.media && props.item.media[0] && props.item.media[0].linkMedia} alt width={100} /></figure>
                                         <div className="stat-tools">
                                             <div className="box">
                                                 <div className="Like"><a className="Like__link"><i className="icofont-like" />

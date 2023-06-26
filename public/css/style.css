@@ -15260,6 +15260,13 @@ ul.chatting-area.max-height {
 Advanced example - Customized layout
 
 */
+@media all and (min-width: 625px) {
+
+
+  .pop-item>figure img {
+    width: 1000px;
+  }
+}
 
 @media all and (min-width: 600px) {
 

@@ -22,6 +22,7 @@ export default function Achivement () {
     const dispatch = useDispatch()
     const { arrAchivement } = useSelector(root => root.AchivementReducer)
     console.log(arrAchivement);
+    const [showInput, setShowInput] = useState(true);
     const [id, setID] = useState('abc')
     let counter = 0;
     let emptyProduct = {
@@ -42,6 +43,8 @@ export default function Achivement () {
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log("Upload is " + progress + "% done");
             // console.log(snapshot);
+            setShowInput(false);
+
         },
             (err) => console.log(err),
             () => {
@@ -53,7 +56,7 @@ export default function Achivement () {
             });
     };
 
-    const [text, setText] = useState('Add New')
+    const [text, setText] = useState('Thêm Mới Thành Tựu')
     const [products, setProducts] = useState([]);
     const [productDialog, setProductDialog] = useState(false);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
@@ -114,13 +117,14 @@ export default function Achivement () {
                 await dispatch(action)
                 setProductDialog(false);
                 counter++;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Updated Achivement', life: 3000, });
+                toast.current.show({ severity: 'success', summary: 'Thành Công', detail: `Cập Nhật Thành Công Thành Tựu ${product.achivementId}`, life: 3000, });
+                setText('')
 
             } else {
                 const action = await CreateAchivementAction(product)
                 await dispatch(action)
                 counter++;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Created Achivement', life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Thành Công', detail: 'Tạo Mới Thành Tựu Thành Công', life: 3000 });
 
 
             }
@@ -134,7 +138,7 @@ export default function Achivement () {
     };
 
     const editProduct = (product) => {
-        setText('Edits')
+        setText('Chỉnh Sửa Thành Tựu')
         setProduct({ ...product });
         setProductDialog(true);
     };
@@ -151,7 +155,7 @@ export default function Achivement () {
         setDeleteProductDialog(false);
         setProduct(emptyProduct);
         toast.current.show({
-            severity: 'error', summary: 'Successful', detail: 'Deleted Achivement', life: 3000, options: {
+            severity: 'error', summary: 'Thành Công', detail: `Xóa Thành Tựu ${product.achivementId} Thành Công`, life: 3000, options: {
                 style: {
                     zIndex: 100
                 }
@@ -197,7 +201,7 @@ export default function Achivement () {
         setProducts(_products);
         setDeleteProductsDialog(false);
         setSelectedProducts(null);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Deleted  Achivement', life: 3000 });
+        toast.current.show({ severity: 'success', summary: 'Thành Công', detail: 'Xóa Thành Công Thành Tựu', life: 3000 });
     };
 
     const onCategoryChange = (e) => {
@@ -235,14 +239,14 @@ export default function Achivement () {
     const leftToolbarTemplate = () => {
         return (
             <div className="flex flex-wrap gap-2">
-                <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} />
-                <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+                <Button label="Thêm Mới" icon="pi pi-plus" severity="success" onClick={openNew} />
+                {/* <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} /> */}
             </div>
         );
     };
 
     const rightToolbarTemplate = () => {
-        return <Button label="Export" icon="pi pi-upload" style={{ marginRight: '50px' }} className="p-button-help" onClick={exportCSV} />;
+        return <Button label="Tải Xuống" icon="pi pi-upload" style={{ marginRight: '50px' }} className="p-button-help" onClick={exportCSV} />;
     };
 
     const imageBodyTemplate = (rowData) => {
@@ -289,23 +293,23 @@ export default function Achivement () {
 
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <h4 className="m-0">Manage Achivements</h4>
+            <h4 className="m-0 mb-3">Quản Lý Thành Tựu</h4>
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Tìm Kiếm..." />
             </span>
         </div>
     );
     const productDialogFooter = (
         <React.Fragment>
-            <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
+            <Button label="Hủy Bỏ" icon="pi pi-times" outlined onClick={hideDialog} />
+            <Button label="Hoàn Thành" icon="pi pi-check" onClick={saveProduct} />
         </React.Fragment>
     );
     const deleteProductDialogFooter = (
         <React.Fragment>
-            <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
+            <Button label="Hủy Bỏ" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
+            <Button label="Đồng Ý" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
         </React.Fragment>
     );
     const deleteProductsDialogFooter = (
@@ -325,12 +329,12 @@ export default function Achivement () {
                     <DataTable ref={dt} value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header}>
-                        <Column selectionMode="multiple" exportable={false}></Column>
-                        <Column field="achivementId" header="Code" sortable style={{ minWidth: '11rem' }}></Column>
-                        <Column field="achivementLogo" header="Image" body={imageBodyTemplate}></Column>
-                        <Column field="description" header="Name" sortable style={{ minWidth: '12rem' }}></Column>
-                        <Column field={createAt => moment(createAt.createAt).format('DD-MM-YYYY')} header="Day" sortable style={{ minWidth: '12rem' }}></Column>
+                        currentPageReportTemplate="Đang hiển thị {first} đến {last} trong tổng số {totalRecords} sản phẩm" globalFilter={globalFilter} header={header}>
+                        {/* <Column selectionMode="multiple" exportable={false}></Column> */}
+                        <Column field="achivementId" header="Mã" sortable style={{ minWidth: '11rem' }}></Column>
+                        <Column field="achivementLogo" header="Hình Ảnh" body={imageBodyTemplate}></Column>
+                        <Column field="description" header="Tên Thành Tựu" sortable style={{ minWidth: '12rem' }}></Column>
+                        <Column field={createAt => moment(createAt.createAt).format('DD-MM-YYYY')} header="Ngày Tạo" sortable style={{ minWidth: '12rem' }}></Column>
                         {/* <Column field="price" header="Price" body={priceBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
                         <Column field="category" header="Category" sortable style={{ minWidth: '10rem' }}></Column>
                         <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable style={{ minWidth: '12rem' }}></Column>
@@ -339,23 +343,30 @@ export default function Achivement () {
                     </DataTable>
                 </div>
 
-                <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={text} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} onClick={() => { setText('Thêm Mới Thành Tựu') }} header={text} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
 
                     <div className="field">
-                        <label htmlFor="name" className="font-bold">
-                            Logo
+                        <label htmlFor="name" className="font-bold" style={{ fontWeight: 'bold' }}>
+                            Hình Ảnh
                         </label>
                         <br />
-                        {product?.achivementLogo === '' ? <div></div> : <img src={product.achivementLogo} style={{ width: '200px', height: '200px' }} />}
+                        <div>
+                            <label htmlFor="img" className="input-preview">
+                                <input name="img" id="img" className="input-preview__src" style={{ opacity: 0 }} type="file" onChange={(e) => onInputChange(e, 'achivementLogo')} />
+                                {product?.achivementLogo === '' ? <div></div> : <img src={product.achivementLogo} style={{ width: '900px', height: '195px', borderRadius: '5px' }} />}
+                            </label>
+                            {submitted && !product.achivementLogo && <small className="p-error">Hình Ảnh Thành Tựu Không Được Để Trống.</small>}
+                        </div>
+
                         <br />
-                        <input type='file' id="achivementLogo" onChange={(e) => onInputChange(e, 'achivementLogo')} />
+                        {/* <input type='file' id="achivementLogo" onChange={(e) => onInputChange(e, 'achivementLogo')} /> */}
                     </div>
                     <div className="field">
-                        <label htmlFor="description" className="font-bold">
-                            Description
+                        <label htmlFor="description" className="font-bold" style={{ fontWeight: 'bold' }}>
+                            Miêu Tả
                         </label>
                         <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-                        {/* {submitted && !product.description && <small className="p-error">Name is required.</small>} */}
+                        {submitted && !product.description && <small className="p-error">Miêu Tả Thành Tựu Không Được Để Trống.</small>}
                     </div>
 
 
@@ -363,12 +374,12 @@ export default function Achivement () {
 
                 </Dialog>
 
-                <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Thông Báo" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
                     <div className="confirmation-content">
                         <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                         {product && (
                             <span>
-                                Are you sure you want to delete <b>{product.name}</b>?
+                                Bạn có chắc chắn muốn xóa thành tựu <b>{product.achivementId}</b>?
                             </span>
                         )}
                     </div>

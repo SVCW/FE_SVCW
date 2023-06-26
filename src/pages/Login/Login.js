@@ -79,17 +79,17 @@ export default function Login (props) {
                 <div className="mockup left-bottom"><img src="images/mockup.png" alt /></div>
                 <div className="verticle-center">
                     <div className="login-form">
-                        <h4><i className="icofont-key-hole" /> Login</h4>
+                        <h4><i className="icofont-key-hole" /> Đăng Nhập</h4>
                         <form method="post" className="c-form" onSubmit={formik.handleSubmit}>
-                            <input type="text" placeholder="User Name @" />
-                            <input type="password" placeholder="xxxxxxxxxx" />
+                            <input type="text" placeholder="Tài Khoản" />
+                            <input type="password" placeholder="Mật Khẩu" />
                             <div className="checkbox">
                                 <input type="checkbox" id="checkbox" defaultChecked />
-                                <label htmlFor="checkbox"><span>Remember Me</span></label>
+                                <label htmlFor="checkbox"><span>Ghi Nhớ</span></label>
                             </div>
                             <button className="main-btn" type="submit" onClick={() => {
                                 props.history.push('/achivement')
-                            }}><i className="icofont-key" /> Login</button>
+                            }}><i className="icofont-key" /> Đăng nhập</button>
                             <p
                                 style={{
                                     marginTop: 20,

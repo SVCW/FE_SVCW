@@ -234,14 +234,14 @@ export default function Role () {
     const leftToolbarTemplate = () => {
         return (
             <div className="flex flex-wrap gap-2">
-                <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} />
-                <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+                <Button label="Thêm Mới" icon="pi pi-plus" severity="success" onClick={openNew} />
+                {/* <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} /> */}
             </div>
         );
     };
 
     const rightToolbarTemplate = () => {
-        return <Button label="Export" icon="pi pi-upload" style={{ marginRight: '50px' }} className="p-button-help" onClick={exportCSV} />;
+        return <Button label="Tải Xuống" icon="pi pi-upload" style={{ marginRight: '50px' }} className="p-button-help" onClick={exportCSV} />;
     };
 
     const imageBodyTemplate = (rowData) => {
@@ -288,10 +288,10 @@ export default function Role () {
 
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <h4 className="m-0">Manage Role</h4>
+            <h4 className="m-0 mb-4">Quản Lý Vai Trò</h4>
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Tìm Kiếm..." />
             </span>
         </div>
     );
@@ -325,10 +325,10 @@ export default function Role () {
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header}>
-                        <Column selectionMode="multiple" exportable={false}></Column>
-                        <Column field="roleId" header="Code" sortable style={{ minWidth: '11rem' }}></Column>
-                        <Column field="roleName" header="Name" sortable style={{ minWidth: '11rem' }}></Column>
-                        <Column field="description" header="Description" sortable style={{ minWidth: '12rem' }}></Column>
+                        {/* <Column selectionMode="multiple" exportable={false}></Column> */}
+                        <Column field="roleId" header="Mã" sortable style={{ minWidth: '11rem' }}></Column>
+                        <Column field="roleName" header="Tên Vai Trò" sortable style={{ minWidth: '11rem' }}></Column>
+                        <Column field="description" header="Miêu Tả" sortable style={{ minWidth: '12rem' }}></Column>
                         {/* <Column field={createAt => moment(createAt.createAt).format('DD-MM-YYYY')} header="Day" sortable style={{ minWidth: '12rem' }}></Column> */}
                         {/* <Column field="price" header="Price" body={priceBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
                         <Column field="category" header="Category" sortable style={{ minWidth: '10rem' }}></Column>

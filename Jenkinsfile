@@ -7,9 +7,21 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Build') {
             steps {
-                echo 'hihihi'
+                echo 'Build'
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                echo 'Run Tests'
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                echo 'Cleanup'
             }
         }
     }

@@ -85,7 +85,7 @@ export default function Login (props) {
                             <input type="password" placeholder="Mật Khẩu" />
                             <div className="checkbox">
                                 <input type="checkbox" id="checkbox" defaultChecked />
-                                <label htmlFor="checkbox"><span>Ghi nhớ</span></label>
+                                <label htmlFor="checkbox"><span>Ghi Nhớ</span></label>
                             </div>
                             <button className="main-btn" type="submit" onClick={() => {
                                 props.history.push('/achivement')

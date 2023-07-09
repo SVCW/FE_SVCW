@@ -5,6 +5,9 @@ import { ProcessTypeReducer } from './reducers/ProcessTypeReducer';
 import { ReportType } from './reducers/ReportType'
 import { RoleReducer } from './reducers/RoleReducer';
 import { ActivityReducer } from './reducers/ActivityReducer';
+import { baiTapGameXucXacReducer } from './reducers/baiTapGameXucXacReducer';
+import { ConfigActivityReducer } from './reducers/ConfigActivityReducer';
+import { FanpageReducer } from './reducers/FanpageReducer';
 
 
 const rootReducer = combineReducers({
@@ -13,6 +16,9 @@ const rootReducer = combineReducers({
     ReportType,
     RoleReducer,
     ActivityReducer,
+    baiTapGameXucXacReducer,
+    ConfigActivityReducer,
+    FanpageReducer,
 })
 
 let middleWare = applyMiddleware(reduxThunk);

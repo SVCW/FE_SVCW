@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom/cjs/react-router-dom'
 
 export default function Carousel () {
     return (
@@ -17,7 +18,7 @@ export default function Carousel () {
                                         </svg></i>
                                 </div>
                             </div>
-                            <div className="col-lg-8">
+                            <div className="col-lg-8 pl-5">
                                 <div className="page-caro">
                                     <div className="link-item">
                                         <a className="active" href="feed.html" title>
@@ -42,7 +43,7 @@ export default function Carousel () {
                                             <p>Videos</p>
                                         </a>
                                     </div>
-                                    <div className="link-item">
+                                    {/* <div className="link-item">
                                         <a href="courses.html" title>
                                             <i className>
                                                 <svg className="feather feather-airplay" strokeLinejoin="round" strokeLinecap="round" strokeWidth={2} stroke="currentColor" fill="none" viewBox="0 0 24 24" height={24} width={24} xmlns="http://www.w3.org/2000/svg">
@@ -51,7 +52,7 @@ export default function Carousel () {
                                                 </svg></i>
                                             <p>Courses</p>
                                         </a>
-                                    </div>
+                                    </div> */}
                                     <div className="link-item">
                                         <a href="books.html" title>
                                             <i className>
@@ -74,7 +75,7 @@ export default function Carousel () {
                                         </a>
                                     </div>
                                     <div className="link-item">
-                                        <a href="groups.html" title>
+                                        <NavLink to="/groups" title>
                                             <i className>
                                                 <svg className="feather feather-users" strokeLinejoin="round" strokeLinecap="round" strokeWidth={2} stroke="currentColor" fill="none" viewBox="0 0 24 24" height={24} width={24} xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -83,9 +84,10 @@ export default function Carousel () {
                                                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                                 </svg>
                                             </i>
-                                            <p>Groups</p>
-                                        </a>
+                                            <p>Group</p>
+                                        </NavLink>
                                     </div>
+
                                 </div>
                             </div>
                             <div className="col-lg-2">

@@ -6,27 +6,92 @@ import { useState } from 'react';
 import moment from 'moment';
 import DetailActivity from '../../component/DetailActivity';
 import { Fragment } from 'react';
+import { NavLink } from 'react-router-dom/cjs/react-router-dom';
+import { FilePond, registerPlugin } from 'react-filepond'
 
+// Import FilePond styles
+import 'filepond/dist/filepond.min.css'
 
+// Import the Image EXIF Orientation and Image Preview plugins
+// Note: These need to be installed separately
+// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+import { storage_bucket } from '../../firebase';
+import { GetListFanpageAction } from '../../redux/actions/FanpageAction';
+import SimpleSlider from '../../component/SimpleSlider';
+// Register the plugins
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
 
 export default function Home () {
 
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+    };
+    function calculateImageClass (imageCount) {
+        let imageClass = 'full-width';
+        if (imageCount === 2) {
+            imageClass = 'half-width';
+        } else if (imageCount === 3 || imageCount === 4) {
+            imageClass = 'quarter-width';
+        }
+        return imageClass;
+    }
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleClick = () => {
+        setIsOpen((prevIsOpen) => !prevIsOpen);
+    };
+    const popupStyle = {
+        opacity: isOpen ? 1 : 0,
+        visibility: isOpen ? "visible" : "hidden",
+        overflow: isOpen ? "auto" : "hidden"
+    };
+    const [files, setFiles] = useState([])
+
+    const handleFileUpload = async (fileItems) => {
+        try {
+            for (const fileItem of fileItems) {
+                const fileRef = storage_bucket.ref().child(fileItem.filename);
+                await fileRef.put(fileItem.file);
+                console.log(fileRef);
+                console.log("File uploaded:", fileItem.filename);
+            }
+            console.log("All files uploaded successfully");
+        } catch (error) {
+            console.error("Error uploading files:", error);
+        }
+    };
+    // console.log(files);
     const dispatch = useDispatch();
     const { arrActivity } = useSelector(root => root.ActivityReducer)
+    const { arrFanpage } = useSelector(root => root.FanpageReducer)
     console.log(arrActivity);
     const [cmt, setCmt] = useState([])
     const [time, setTime] = useState([])
     const [detail, setDetail] = useState({})
-    const initialCommentData = JSON.parse(localStorage.getItem('activity')).map((comment) => ({
+    const [create, setCreate] = useState(true)
+    // console.log(create);
+    const initialCommentData = JSON.parse(localStorage.getItem('activity'))?.map((comment) => ({
         id: comment.activityId,
         isCmt: true,
         color: '#eae9ee'
     }));
+    const handleSetDetail = (media) => {
+        setDetail(media);
+        // Xử lý logic khác khi setDetail được gọi
+    };
 
 
     const [commentData, setCommentData] = useState(initialCommentData);
+    console.log(commentData);
     const handleCommentClick = (id) => {
-        const updatedComments = commentData.map((comment) => {
+        const updatedComments = commentData?.map((comment) => {
             if (comment.id === id) {
                 return { ...comment, isCmt: !comment.isCmt };
             }
@@ -53,12 +118,14 @@ export default function Home () {
     useEffect(() => {
         const action = GetListActivityAction();
         dispatch(action)
+        const action1 = GetListFanpageAction();
+        dispatch(action1)
     }, []);
     useEffect(() => {
         // Cập nhật arrActivity với commentData mới
         const updatedArrActivity = arrActivity.map((activity) => {
 
-            const matchingComments = commentData.filter((comment) => comment.id === activity.activityId);
+            const matchingComments = commentData?.filter((comment) => comment.id === activity.activityId);
             return { ...activity, commentData: matchingComments };
         });
 
@@ -88,7 +155,7 @@ export default function Home () {
         }
         return timeAgoString
     }
-    console.log(detail);
+
     return (
         <Fragment>
             <section>
@@ -133,7 +200,7 @@ export default function Home () {
                                                 </figure>
                                             </div>{/* adversment widget */}
                                             <div className="widget">
-                                                <h4 className="widget-title"><i className="icofont-flame-torch" /> Popular Courses
+                                                <h4 className="widget-title"><i className="icofont-flame-torch" /> Popular Activity
                                                 </h4>
                                                 <ul className="premium-course">
                                                     <li>
@@ -233,10 +300,10 @@ export default function Home () {
                                             <li><a href="#" title>Recent</a></li>
                                             <li><a href="#" title>Favourit</a></li>
                                         </ul>{/* tab buttons */}
-                                        <div className="main-wraper">
+                                        <div className="main-wraper" onClick={handleClick} style={{ cursor: 'pointer' }}>
                                             <span className="new-title">Create New Post</span>
                                             <div className="new-post">
-                                                <form method="post">
+                                                <form method="post" onClick={handleClick}>
                                                     <i className="icofont-pen-alt-1" />
                                                     <input type="text" placeholder="Create New Post" />
                                                 </form>
@@ -262,7 +329,7 @@ export default function Home () {
                                                 </ul>
                                             </div>
                                         </div>{/* create new post */}
-                                        <div className="story-card" style={{ marginLeft: '20px' }}>
+                                        {/* <div className="story-card" style={{ marginLeft: '20px' }}>
                                             <div className="story-title">
                                                 <h5>Recent Stories</h5>
                                                 <a href="#" title>See all</a>
@@ -297,7 +364,7 @@ export default function Home () {
                                                 <span>Daniel Cardos</span>
                                             </div>
 
-                                        </div>
+                                        </div> */}
                                         {/* stories */}
                                         {/* <div className="main-wraper">
                                                 <div className="chatroom-title">
@@ -367,31 +434,13 @@ export default function Home () {
                                                     <div className="friend-name">
                                                         <ins><a title href="time-line.html">Suggested</a></ins>
                                                         <span><i className="icofont-runner-alt-1" /> Follow similar
-                                                            People</span>
+                                                            Fanpage</span>
                                                     </div>
-                                                    <ul className="suggested-caro">
-                                                        <li>
-                                                            <figure><img src="images/resources/speak-1.jpg" alt /></figure>
-                                                            <span>Amy Watson</span>
-                                                            <ins>Department of Socilolgy</ins>
-                                                            <a href="#" title data-ripple><i className="icofont-star" />
-                                                                Follow</a>
-                                                        </li>
-                                                        <li>
-                                                            <figure><img src="images/resources/speak-2.jpg" alt /></figure>
-                                                            <span>Muhammad Khan</span>
-                                                            <ins>Department of Socilolgy</ins>
-                                                            <a href="#" title data-ripple><i className="icofont-star" />
-                                                                Follow</a>
-                                                        </li>
-                                                        <li>
-                                                            <figure><img src="images/resources/speak-3.jpg" alt /></figure>
-                                                            <span>Sadia Gill</span>
-                                                            <ins>Department of Socilolgy</ins>
-                                                            <a href="#" title data-ripple><i className="icofont-star" />
-                                                                Follow</a>
-                                                        </li>
-                                                    </ul>
+
+                                                    <SimpleSlider arrFanpage={arrFanpage} />
+
+
+                                                    {/* </ul> */}
                                                 </div>
                                             </div>
                                         </div>{/* suggested friends */}
@@ -448,14 +497,44 @@ export default function Home () {
 
                                                             <figure style={{}}>
                                                                 <p style={{ width: '100%' }}>fetched-image</p>
-                                                                {item.media?.map((item, index) => {
-                                                                    return <a data-toggle="modal" data-target="#img-comt"
-                                                                        href="images/resources/album1.jpg" onClick={() => {
-                                                                            setDetail(detailItem)
-                                                                        }}>
-                                                                        <img src={item.linkMedia} style={{ width: '100%', objectFit: 'cover', height: '400px' }} />
-                                                                    </a>
-                                                                })}
+
+                                                                <div className="image-gallery">
+                                                                    {/* {item.media?.map((image, index) => (
+                                                                        <div key={index} className={`image-container ${calculateImageClass(image.length)}`}>
+                                                                        <a data-toggle="modal" data-target="#img-comt"
+                                                                            href="images/resources/album1.jpg" onClick={() => {
+                                                                                setDetail(detailItem)
+                                                                            }}>
+                                                                            <img src={item.linkMedia} style={{ width: '100%', objectFit: 'cover', height: '400px' }} />
+                                                                    </div> */}
+                                                                    {/* ))} */}
+                                                                    {/* {item.media?.map((item, index) => {
+                                                                        return <a data-toggle="modal" data-target="#img-comt"
+                                                                            href="images/resources/album1.jpg" onClick={() => {
+                                                                                setDetail(detailItem)
+                                                                            }}>
+                                                                            <img src={item.linkMedia} style={{ width: '100%', objectFit: 'cover', height: '400px' }} />
+                                                                        </a>
+                                                                    })} */}
+                                                                    {/* <Media media={item?.media} item={detailItem} dateTime={DateTime} /> */}
+                                                                    <div className="image-gallery">
+                                                                        {item.media?.map((image, index) => {
+
+
+                                                                            const imageClass = calculateImageClass(item.media.length);
+                                                                            // console.log(imageClass);
+                                                                            // console.log(item.media.length);
+                                                                            return <div key={index} className={`image-container ${imageClass} `}>
+                                                                                <a data-toggle="modal" data-target="#img-comt" href="images/resources/album1.jpg" onClick={() => {
+                                                                                    setDetail(detailItem)
+                                                                                }}>
+                                                                                    <img src={image.linkMedia} alt={`Image ${image.id}`} className="gallery-image" />
+                                                                                </a>
+                                                                            </div>
+                                                                        })}
+                                                                    </div>
+                                                                </div>
+
                                                             </figure>
                                                             <a href="https://themeforest.net/item/winku-social-network-toolkit-responsive-template/22363538" className="post-title" target="_blank">{item.title}</a>
                                                             <p>
@@ -511,7 +590,7 @@ export default function Home () {
                                                             </div>
                                                             <div className="stat-tools">
                                                                 <div className="" style={{
-                                                                    backgroundColor: `${item.commentData[0].color}`,
+                                                                    backgroundColor: `${item.commentData[0]?.color}`,
                                                                     borderRadius: '4px',
                                                                     color: '#82828e',
                                                                     display: 'inline-block',
@@ -1706,11 +1785,11 @@ export default function Home () {
                                                 </div>
                                             </div>{/* suggested group */}
                                             <div className="widget">
-                                                <h4 className="widget-title">Ask Research Question?</h4>
+                                                <h4 className="widget-title">Giải Trí</h4>
                                                 <div className="ask-question">
                                                     <i className="icofont-question-circle" />
-                                                    <h6>Ask questions in Q&amp;A to get help from experts in your field.</h6>
-                                                    <a className="ask-qst" href="#" title>Ask a question</a>
+                                                    <h6>Trò Chơi Xúc Xắc</h6>
+                                                    <NavLink to='/game' >Chơi Game</NavLink>
                                                 </div>
                                             </div>{/* ask question widget */}
                                             <div className="widget">
@@ -1970,91 +2049,109 @@ export default function Home () {
                     </div>
                 </div>
             </div>{/* side slide message & popup */}
-            <div className="post-new-popup">
-                <div className="popup" style={{ width: 800 }}>
-                    <span className="popup-closed"><i className="icofont-close" /></span>
-                    <div className="popup-meta">
-                        <div className="popup-head">
-                            <h5><i>
-                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-plus">
-                                    <line x1={12} y1={5} x2={12} y2={19} />
-                                    <line x1={5} y1={12} x2={19} y2={12} />
-                                </svg></i>Create New Post</h5>
-                        </div>
-                        <div className="post-new">
-                            <div className="post-newmeta">
-                                <ul className="post-categoroes">
-                                    <li><i className="icofont-camera" /> Photo / Video</li>
-                                    <li><i className="icofont-google-map" /> Post Location</li>
-                                    <li><i className="icofont-file-gif" /> Post Gif</li>
-                                    <li><i className="icofont-ui-tag" /> Tag to Friend</li>
-                                    <li><i className="icofont-users" /> Share in Group</li>
-                                    <li><i className="icofont-link" /> Share Link</li>
-                                    <li><i className="icofont-video-cam" /> Go Live</li>
-                                    <li><i className="icofont-sale-discount" /> Post Online Course</li>
-                                    <li><i className="icofont-read-book" /> Post A Book</li>
-                                    <li><i className="icofont-globe" /> Post an Ad</li>
-                                </ul>
-                                <form method="post" className="dropzone" action="/upload-target">
-                                    <div className="fallback">
-                                        <input name="file" type="file" />
+
+            {create === true ?
+                <div className="post-new-popup" style={popupStyle}
+
+                >
+                    <div className="popup" style={{ width: 800 }}>
+                        <span className="popup-closed" onClick={handleClick}><i className="icofont-close" /></span>
+                        <div className="popup-meta">
+                            <div className="popup-head">
+                                <h5><i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-plus">
+                                        <line x1={12} y1={5} x2={12} y2={19} />
+                                        <line x1={5} y1={12} x2={19} y2={12} />
+                                    </svg></i>Create New Post</h5>
+                            </div>
+                            <div className="post-new">
+                                <div className="post-newmeta">
+                                    <ul className="post-categoroes">
+                                        <li><i className="icofont-camera" /> Photo / Video</li>
+                                        <li><i className="icofont-google-map" /> Post Location</li>
+                                        <li><i className="icofont-file-gif" /> Post Gif</li>
+                                        <li><i className="icofont-ui-tag" /> Tag to Friend</li>
+                                        <li><i className="icofont-users" /> Share in Group</li>
+                                        <li><i className="icofont-link" /> Share Link</li>
+                                        <li><i className="icofont-video-cam" /> Go Live</li>
+                                        <li><i className="icofont-sale-discount" /> Post Online Course</li>
+                                        <li><i className="icofont-read-book" /> Post A Book</li>
+                                        <li><i className="icofont-globe" /> Post an Ad</li>
+                                    </ul>
+                                    {/* <form method="post" className="dropzone dz-clickable" action="/upload-target">
+                                        <div className="fallback">
+                                            <input name="file" type="file" />
+                                        </div>
+                                    </form> */}
+                                    <div style={{ overflow: 'auto', cursor: 'pointer', minHeight: '100px', maxHeight: '300px' }}>
+                                        <FilePond
+                                            files={files}
+                                            onupdatefiles={handleFileUpload}
+                                            allowMultiple={true}
+                                            maxFiles={50}
+                                            labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                                        />
                                     </div>
+
+                                </div>
+                                <form method="post" className="c-form">
+                                    <textarea id="emojionearea1" placeholder="What's On Your Mind?" defaultValue={""} />
+                                    <div className="activity-post">
+                                        <div className="checkbox">
+                                            <input type="checkbox" id="checkbox" defaultChecked />
+                                            <label htmlFor="checkbox"><span>Activity Feed</span></label>
+                                        </div>
+                                        <div className="checkbox">
+                                            <input type="checkbox" id="checkbox2" defaultChecked />
+                                            <label htmlFor="checkbox2"><span>My Story</span></label>
+                                        </div>
+                                    </div>
+                                    <div className="select-box">
+                                        <div className="select-box__current" tabIndex={1}>
+                                            <div className="select-box__value"><input className="select-box__input" type="radio" id={0} defaultValue={1} name="Ben" defaultChecked="checked" />
+                                                <p className="select-box__input-text"><i className="icofont-globe-alt" /> Public</p>
+                                            </div>
+                                            <div className="select-box__value"><input className="select-box__input" type="radio" id={1} defaultValue={2} name="Ben" defaultChecked="checked" />
+                                                <p className="select-box__input-text"><i className="icofont-lock" /> Private</p>
+                                            </div>
+                                            <div className="select-box__value"><input className="select-box__input" type="radio" id={2} defaultValue={3} name="Ben" defaultChecked="checked" />
+                                                <p className="select-box__input-text"><i className="icofont-user" /> Specific Friend
+                                                </p>
+                                            </div>
+                                            <div className="select-box__value"><input className="select-box__input" type="radio" id={3} defaultValue={4} name="Ben" defaultChecked="checked" />
+                                                <p className="select-box__input-text"><i className="icofont-star" /> Only Friends</p>
+                                            </div>
+                                            <div className="select-box__value"><input className="select-box__input" type="radio" id={4} defaultValue={5} name="Ben" defaultChecked="checked" />
+                                                <p className="select-box__input-text"><i className="icofont-users-alt-3" /> Joined
+                                                    Groups</p>
+                                            </div>
+                                            <img className="select-box__icon" src="images/arrow-down.svg" alt="Arrow Icon" aria-hidden="true" />
+                                        </div>
+                                        <ul className="select-box__list">
+                                            <li><label className="select-box__option" htmlFor={0}><i className="icofont-globe-alt" />
+                                                Public</label></li>
+                                            <li><label className="select-box__option" htmlFor={1}><i className="icofont-lock" />
+                                                Private</label></li>
+                                            <li><label className="select-box__option" htmlFor={2}><i className="icofont-user" /> Specific
+                                                Friend</label></li>
+                                            <li><label className="select-box__option" htmlFor={3}><i className="icofont-star" /> Only
+                                                Friends</label></li>
+                                            <li><label className="select-box__option" htmlFor={4}><i className="icofont-users-alt-3" />
+                                                Joined Groups</label></li>
+                                        </ul>
+                                    </div>
+                                    <input className="schedule-btn" type="text" id="datetimepicker" readOnly />
+                                    <input type="text" placeholder="https://www.youtube.com/watch?v=vgvsuiFlA-Y&t=56s" />
+                                    <button type="submit" className="main-btn">Publish</button>
                                 </form>
                             </div>
-                            <form method="post" className="c-form">
-                                <textarea id="emojionearea1" placeholder="What's On Your Mind?" defaultValue={""} />
-                                <div className="activity-post">
-                                    <div className="checkbox">
-                                        <input type="checkbox" id="checkbox" defaultChecked />
-                                        <label htmlFor="checkbox"><span>Activity Feed</span></label>
-                                    </div>
-                                    <div className="checkbox">
-                                        <input type="checkbox" id="checkbox2" defaultChecked />
-                                        <label htmlFor="checkbox2"><span>My Story</span></label>
-                                    </div>
-                                </div>
-                                <div className="select-box">
-                                    <div className="select-box__current" tabIndex={1}>
-                                        <div className="select-box__value"><input className="select-box__input" type="radio" id={0} defaultValue={1} name="Ben" defaultChecked="checked" />
-                                            <p className="select-box__input-text"><i className="icofont-globe-alt" /> Public</p>
-                                        </div>
-                                        <div className="select-box__value"><input className="select-box__input" type="radio" id={1} defaultValue={2} name="Ben" defaultChecked="checked" />
-                                            <p className="select-box__input-text"><i className="icofont-lock" /> Private</p>
-                                        </div>
-                                        <div className="select-box__value"><input className="select-box__input" type="radio" id={2} defaultValue={3} name="Ben" defaultChecked="checked" />
-                                            <p className="select-box__input-text"><i className="icofont-user" /> Specific Friend
-                                            </p>
-                                        </div>
-                                        <div className="select-box__value"><input className="select-box__input" type="radio" id={3} defaultValue={4} name="Ben" defaultChecked="checked" />
-                                            <p className="select-box__input-text"><i className="icofont-star" /> Only Friends</p>
-                                        </div>
-                                        <div className="select-box__value"><input className="select-box__input" type="radio" id={4} defaultValue={5} name="Ben" defaultChecked="checked" />
-                                            <p className="select-box__input-text"><i className="icofont-users-alt-3" /> Joined
-                                                Groups</p>
-                                        </div>
-                                        <img className="select-box__icon" src="images/arrow-down.svg" alt="Arrow Icon" aria-hidden="true" />
-                                    </div>
-                                    <ul className="select-box__list">
-                                        <li><label className="select-box__option" htmlFor={0}><i className="icofont-globe-alt" />
-                                            Public</label></li>
-                                        <li><label className="select-box__option" htmlFor={1}><i className="icofont-lock" />
-                                            Private</label></li>
-                                        <li><label className="select-box__option" htmlFor={2}><i className="icofont-user" /> Specific
-                                            Friend</label></li>
-                                        <li><label className="select-box__option" htmlFor={3}><i className="icofont-star" /> Only
-                                            Friends</label></li>
-                                        <li><label className="select-box__option" htmlFor={4}><i className="icofont-users-alt-3" />
-                                            Joined Groups</label></li>
-                                    </ul>
-                                </div>
-                                <input className="schedule-btn" type="text" id="datetimepicker" readOnly />
-                                <input type="text" placeholder="https://www.youtube.com/watch?v=vgvsuiFlA-Y&t=56s" />
-                                <button type="submit" className="main-btn">Publish</button>
-                            </form>
                         </div>
                     </div>
                 </div>
-            </div>{/* New post popup */}
+                :
+                <div></div>
+            }
+
             <div className="new-question-popup">
                 <div className="popup">
                     <span className="popup-closed"><i className="icofont-close" /></span>

@@ -1,10 +1,11 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom/cjs/react-router-dom'
 
 export default function Header () {
     return (
         <header className>
             <div className="topbar stick">
-                <div className="logo"><img src="images/logo.png" alt /><span>Socimo</span></div>
+                <NavLink to='/home' className="logo"><img src="images/logo.png" alt /><span>Socimo</span></NavLink>
                 <div className="searches">
                     <form method="post">
                         <input type="text" placeholder="Search..." />
@@ -55,12 +56,12 @@ export default function Header () {
                 <ul className="web-elements">
                     <li>
                         <div className="user-dp">
-                            <a href="profile-page2.html" title>
+                            <NavLink to="/profile" title>
                                 <img alt src="images/resources/user.jpg" />
                                 <div className="name">
                                     <h4>Danial Cardos</h4>
                                 </div>
-                            </a>
+                            </NavLink>
                         </div>
                     </li>
                     <li className="go-live">
@@ -131,7 +132,7 @@ export default function Header () {
                             <li><a href="privacy-n-policy.html" title><i className="icofont-notepad" /> Privacy</a>
                             </li>
                             <li><a className="dark-mod" href="#" title><i className="icofont-moon" /> Dark Mode</a></li>
-                            <li className="logout"><a href="sign-in.html" title><i className="icofont-power" /> Logout</a>
+                            <li className="logout"><NavLink to="/" title><i className="icofont-power" /> Logout</NavLink>
                             </li>
                         </ul>
                     </li>

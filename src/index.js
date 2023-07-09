@@ -7,6 +7,8 @@ import { store } from './redux/store'
 import { Provider } from "react-redux";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 ReactDOM.render(
 
   <Provider store={store}>

@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../../firebase';
 import { history } from '../../App';
 import { useState } from 'react';
 import { useFormik } from 'formik'
+import { ConfigActivityAction } from '../../redux/actions/ConfigActivityAction';
+import { useDispatch } from 'react-redux';
+import { GetListActivityAction } from '../../redux/actions/ActivityAction';
 export default function Login (props) {
+    const dispatch = useDispatch()
+    useEffect(() => {
+        const action = GetListActivityAction();
+        dispatch(action)
+    }, []);
+
     const formik = useFormik({
         initialValues: {
 
@@ -16,7 +25,11 @@ export default function Login (props) {
     const signInWithGoogle = () => {
         signInWithPopup(auth, provider).then((result) => {
 
-            console.log(result);
+
+            console.log(result.user?.email);
+            const action = ConfigActivityAction(1)
+            dispatch(action)
+
             props.history.push('/home')
             // console.log(result);
             // console.log(result.user.accessToken);
@@ -88,7 +101,7 @@ export default function Login (props) {
                                 <label htmlFor="checkbox"><span>Ghi Nhớ</span></label>
                             </div>
                             <button className="main-btn" type="submit" onClick={() => {
-                                props.history.push('/achivement')
+                                props.history.push('/home')
                             }}><i className="icofont-key" /> Đăng nhập</button>
                             <p
                                 style={{
